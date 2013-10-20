@@ -93,7 +93,8 @@ public class HeightCalculator {
 					
 					//End Inside
 					//Check if end point of loop platforms check is within the end point of the platform
-					if (platforms.get(j).end() < platforms.get(i).end()) {
+					if (platforms.get(j).end() < platforms.get(i).end() && 
+							(platforms.get(j).start() <= point_progress)) {
 						System.out.println("Doing the End Inside Check for: "+j+": against Platform: "+i);
 						//Set the best point
 						//Calc New height
