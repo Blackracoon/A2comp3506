@@ -15,7 +15,7 @@ public class HeightCalculator {
 			List<Position> platforms) {
 		
 		//Create map object to add to if succesfull addition
-		Map<Position, List<Position>> result = new HashMap<>();
+		Map<Position, List<Position>> result = new LinkedHashMap<>();
 		List<Position> presult;
 		//bestPoint for Check
 		Position bestPoint = null;
@@ -26,7 +26,7 @@ public class HeightCalculator {
 		//int i = 1;
 		
 		
-			System.out.println("===Doing PLATFORM: "+i+" ===");
+			System.out.println("===Doing PLATFORM: "+i+" ===: "+platforms.get(i));
 	
 			//set starting point of platform
 			double startpnt = platforms.get(i).start();
@@ -49,7 +49,7 @@ public class HeightCalculator {
 				//Go through each other platform
 				for (int j=0;j<platforms.size();j++) {
 				//int j=2;
-					System.out.println("        Checking sub Plat - "+j);
+					System.out.println("        Checking sub Plat - "+j+" at point: "+platforms.get(j));
 					
 					//Don't check if height is above or equal to main Platform
 					//--System.out.println(platforms.get(j).height());
@@ -66,15 +66,34 @@ public class HeightCalculator {
 					//	}
 					//}
 					
+					Boolean abovebesth = false;
+					if (bestPoint !=null && bestXHeight != null) {
+						if (bestXHeight < bestPoint.height() ) {
+							abovebesth = true;
+						}
+					}
+					
+					
 					//Store Best X!!
 					if (platforms.get(j).start() > point_progress && 
 							(platforms.get(j).start() < platforms.get(i).end())) {
 						//IF it hasn't been set yet or j start is better then current bestX - set
-						if ( (bestX ==  null) || (platforms.get(j).start() < bestX || bestXHeight < platforms.get(j).height()) ) {
-							//if (bestXpass) {
-								bestX = platforms.get(j).start();
-								bestXHeight = platforms.get(j).height();
-								System.out.println("        Best X Has been set to: "+bestX);
+						System.out.println("BESTX NIGGAAA!!!!!!!!!!!!!!!!!!!!!!!!!: "+bestX);
+						System.out.println("TriGAAAAAAAKLDFJJFFFFFFFF!!!!!!!!!!!!!: "+bestPoint);
+						if (  ((bestX ==  null)  || (platforms.get(j).start() < bestX ||  ((platforms.get(j).height() > bestXHeight) && abovebesth )) )) {
+							//if (bestXpass)
+							//if (bestPoint != nullplatforms.get(j).height() > bestPoint.height()) {
+								
+								System.out.println("BESTPOINTATBESTX: "+bestPoint);
+								if ((bestPoint != null) && 
+								((platforms.get(i).height() - platforms.get(j).height()) >= bestPoint.height()) ) {
+									System.out.println("DONT SET BESTX");
+								} else {								
+							 
+									bestX = platforms.get(j).start();
+									bestXHeight = platforms.get(j).height();
+									System.out.println("        Best X Has been set to: "+bestX);
+								}
 							//}
 						} 
 					}
@@ -128,12 +147,12 @@ public class HeightCalculator {
 					
 					//End Inside
 					//Check if end point of loop platforms check is within the end point of the platform
-					if (platforms.get(j).end() < platforms.get(i).end() && 
+					if (platforms.get(j).end() <= platforms.get(i).end() && 
 							(platforms.get(j).start() <= point_progress)) {
 						System.out.println("        Doing the End Inside Check for: "+j+": against Platform: "+i);
 						//Set the best point
 						//Calc New height
-						if (bestX == null) {
+						if (bestX == null || (platforms.get(j).end() > bestX) ) {
 												
 							bestPoint = new Position(point_progress, platforms.get(j).end(), 
 									platforms.get(i).height() - platforms.get(j).height());
@@ -153,6 +172,8 @@ public class HeightCalculator {
 						//System.out.println("Checking platform: "+j);
 						System.out.println("        Doing the End Outside Check for: "+j+": against Platform: "+i);
 						//Set the best point
+						System.out.println("Height check of i is: "+platforms.get(i).height()+" and hc of j: "+platforms.get(j).height());
+						System.out.println("J is: "+platforms.get(j)+" i PLatform is: "+platforms.get(i));
 						bestPoint = new Position(point_progress, platforms.get(i).end(), platforms.get(i).height() - platforms.get(j).height());
 						System.out.println("        bestpoint at end outside: "+bestPoint);
 						continue;		
@@ -193,10 +214,21 @@ public class HeightCalculator {
 				
 				
 				Position newPoint;
-				if (bestX != null && bestX < bestPoint.end()) {
-					newPoint = new Position(bestPoint.start(), bestX, bestPoint.height() );
-				} else {
+				System.out.println("POOOOP bestX: "+bestX+" bestPOINT is: "+bestPoint);
+				System.out.println("BESTXHEIGHTIS: "+bestXHeight);
+				System.out.println(platforms.get(i).height());
+				//double diffofbestxheight = ;
+				//if () {}
+					//Do the greater than dance
+					
+				
+				
+				if (bestX == null || (bestPoint.end() < bestX ) || (platforms.get(i).height()-bestXHeight) > bestPoint.height()) {
+					
 					newPoint = bestPoint;
+					
+				} else {
+					newPoint = new Position(bestPoint.start(), bestX, bestPoint.height() );
 				}
 				//1. Add the point for the platform
 				presult.add(newPoint);
